@@ -1,0 +1,65 @@
+<ion-content [fullscreen]="true" [ngClass]="getBackgroundClass()">
+  <div class="search-container">
+    <ion-item>
+      <ion-input [(ngModel)]="searchCity" placeholder="Enter city name"></ion-input>
+      <ion-button (click)="searchWeather()">
+        <ion-icon name="search-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </div>
+
+  <div class="weather-container" *ngIf="!loading && !error && weatherData">
+    <div class="location">
+      <h1>{{ weatherData.name }}</h1>
+      <p>{{ weatherData.sys.country }}</p>
+    </div>
+
+    <div class="weather-main">
+      <img [src]="getWeatherIconUrl(weatherData.weather[0].icon)" alt="Weather icon" class="weather-icon">
+      <div class="temperature">
+        {{ weatherData.main.temp | number:'1.0-0' }}°C
+      </div>
+    </div>
+
+    <div class="weather-description">
+      {{ weatherData.weather[0].description }}
+    </div>
+
+    <div class="weather-details">
+      <div class="detail-item">
+        <ion-icon name="water-outline"></ion-icon>
+        <span>{{ weatherData.main.humidity }}%</span>
+        <p>Humidity</p>
+      </div>
+      <div class="detail-item">
+        <ion-icon name="speedometer-outline"></ion-icon>
+        <span>{{ weatherData.main.pressure }} hPa</span>
+        <p>Pressure</p>
+      </div>
+      <div class="detail-item">
+        <ion-icon name="wind-outline"></ion-icon>
+        <span>{{ weatherData.wind.speed }} m/s</span>
+        <p>Wind</p>
+      </div>
+    </div>
+
+    <p class="last-updated" *ngIf="lastUpdated">
+      Last updated: {{ lastUpdated | date:'medium' }}
+    </p>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading weather data...</p>
+  </div>
+
+  <div class="error-container" *ngIf="error">
+    <ion-icon name="cloud-offline-outline" color="danger" size="large"></ion-icon>
+    <h2>Error Loading Weather Data</h2>
+    <p>{{ error }}</p>
+    <ion-button (click)="loadWeather()">
+      <ion-icon name="refresh-outline" slot="start"></ion-icon>
+      Retry
+    </ion-button>
+  </div>
+</ion-content>
